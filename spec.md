@@ -35,7 +35,7 @@
 
 ## 4. Дані та зв'язки
 
-*(посилання на ERD / діаграму БД)*
+[*посилання на ERD*](https://drive.google.com/file/d/1DKs-vhHFmIdZJzECL3sib5XpozYv6CxV/view?usp=sharing)
 
 ---
 
