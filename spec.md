@@ -37,6 +37,16 @@
 
 [*посилання на ERD*](https://drive.google.com/file/d/1DKs-vhHFmIdZJzECL3sib5XpozYv6CxV/view?usp=sharing)
 
+## Обмеження цілісності.
+### У БД (CHECK/UNIQUE):
+- role ∈ {STUDENT, TEACHER};
+- group_id обов'язковий для студента й порожній для вчителя;
+- оцінка 1–100;
+UNIQUE(student_id, lesson_id).
+### У коді (service):
+- у teacher_subjects лише користувачі з роллю TEACHER;
+- оцінка ставиться лише користувачу з роллю STUDENT з групи заняття.
+
 ---
 
 ## 5. Ключові сценарії
