@@ -1,7 +1,8 @@
 # AI Prompt History: Електронний журнал: специфікація проекту
 
-> **Date Exported:** 2026-10-01
-> **Source Session:** `7cb9833c-8c14-423c-836d-fa584c3d82f1`
+> **Date Exported:** 2026-10-01  
+> **Source Session:** `7cb9833c-8c14-423c-836d-fa584c3d82f1`  
+> **Link:** [https://claude.ai/share/a6a7b0c9-716f-40a0-892b-b94651d53e9a](https://claude.ai/share/a6a7b0c9-716f-40a0-892b-b94651d53e9a)
 
 ---
 
@@ -80,8 +81,9 @@
 
 # AI Prompt History: Електронний журнал
 
-> **Date Exported:** 2026-10-01 20:20:56
-> **Source Session:** `3f375b7535ddc297`
+> **Date Exported:** 2026-10-03 00:59:45  
+> **Source Session:** `3f375b7535ddc297`  
+> **Link:** [https://share.gemini.google/aOfInWyWZvrJ](https://share.gemini.google/aOfInWyWZvrJ)
 
 ---
 
@@ -257,4 +259,16 @@ md формат
 
 ```text
 такий же формат обгрунтування prostgresql over mogodb ну в целом реляційна против не реляційної
+```
+
+### Prompt 18
+
+```text
+напиши мені короткий аудит: чи моя структура відповідає spec; топ-3 зайві/неправильні залежності (типу компонентів між собою) якщо такі є.
+```
+
+### Prompt 19
+
+```text
+розпиши по скріну структуру репки?
 ```

@@ -27,13 +27,51 @@
 
 ## Запуск та перевірка
 
-to be continued...
+```bash
+git clone https://github.com/Impe11e/NodeJS_3.git
+cd NodeJS_3
+npm install
+npm start
+```
+
+## Перевірка коду та запуск тестів
+
+```bash
+npm test
+npm run lint
+```
 
 ## Структура репозиторію
 
-to be continued...
+```text
+nodejs3/
+├── .husky/                     # Git-хуки (pre-commit, pre-push)
+├── ai/
+│   └── lab1/
+│       └── prompts.md          # Логи та промпти взаємодії з ШІ
+├── docs/
+│   ├── adr/                    # Архітектурні рішення
+│   └── diagrams/
+│       └── er/                 # ER-діаграма бази даних
+├── src/
+│   ├── __tests__/              # Тести
+│   ├── repositories/           # Шар доступу до даних (PostgreSQL SQL-запити)
+│   ├── routes/                 # Обробка HTTP-запитів Fastify та маршрутизація
+│   ├── services/               # Бізнес-логіка та перевірка правил
+│   ├── types/                  # TypeScript типи та інтерфейси
+│   ├── app.js                  # Ініціалізація та конфігурація Fastify
+│   └── server.js               # Точка входу (запуск HTTP-сервера)
+├── standards/                  # Стандарти розробки, чеклисти та DoD
+├── audit.md                    # Звіт з архітектурного аудиту
+├── Makefile                    # Команди автоматизації збірки/запуску
+├── package.json                # Залежності та npm-скрипти
+├── README.md                   # Головна документація проєкту
+└── spec.md                     # Інженерна специфікація проєкту
+```
 
 ## Інші документи
 
 [spec.md — інженерний опис](./spec.md)  
 [docs/diagrams — діаграми](./docs/diagrams/)
+[docs/adr - архітектурні рішення](./docs/adr/)
+[standards - стандарти розробки](./standards/)
