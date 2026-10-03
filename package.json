@@ -1,0 +1,49 @@
+{
+    "name": "electronic-journal",
+    "version": "1.0.0",
+    "description": "Електронний журнал — навчальний бекенд-застосунок для обліку оцінок студентів",
+    "main": "src/server.js",
+    "type": "module",
+    "scripts": {
+        "start": "node src/server.js",
+        "dev": "node --watch src/server.js",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+        "test:smoke": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch=\"**/src/__tests__/**/*.smoke.test.js\"",
+        "build": "node --check src/server.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "*.js": [
+            "prettier --write",
+            "eslint --fix"
+        ],
+        "*.{json,md,yml,yaml}": [
+            "prettier --write"
+        ]
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "fastify": "^4.26.2",
+        "pg": "^8.11.3"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.0.0",
+        "@types/node": "^26.6.4",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^9.1.0",
+        "globals": "^15.0.0",
+        "husky": "^9.0.11",
+        "jest": "^29.7.0",
+        "lint-staged": "^15.2.2",
+        "prettier": "^3.9.9",
+        "tsx": "^4.23.15",
+        "typescript": "^7.0.2"
+    }
+}
