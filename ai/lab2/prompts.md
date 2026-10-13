@@ -1,6 +1,6 @@
 # AI Prompt History: Електронний журнал
 
-> **Date Exported:** 2026-10-13 17:30:25  
+> **Date Exported:** 2026-10-13 17:51:25  
 > **Source Session:** `a7b42e85cc7d9`  
 > **Link:** [https://share.gemini.google/DyALsNjPqonE](https://share.gemini.google/DyALsNjPqonE)
 
@@ -124,3 +124,49 @@ AppError
 ```
 
 ---
+
+### Prompt 29
+
+```text
+Створи:
+src/routes/gradesRoutes.ts
+src/routes/lessonsRoutes.ts
+src/app.ts
+
+Реалізуй такі endpoint-и:
+POST /grades
+викадач із заголовком X-User-Id передає:
+{
+  "student_id": "uuid",
+  "lesson_id": "uuid",
+  "score": 95
+}
+Потрібно: використати authenticateUserHook, передати дані в поточний GradeService, додати Fastify-валідацію body, при успіху повернути 201 і створену оцінку
+
+2. GET /lessons/:lessonId
+Потрібно використати authenticateUserHook, викликати метод відкриття заняття в GradeService, повернути дату, предмет і список студентів групи, викладач не повинен бачити заняття чужого предмета.
+
+3. GET /grades
+підтримати необов’язкові query-параметри: subject_id, lesson_id
+Студент повинен бачити тільки власні оцінки.
+
+4. GET /grades/average
+Повернути:
+{
+  "average_score": 88.5
+}
+або якщо оцінок немає:
+{
+  "average_score": null
+}
+
+В app.ts:
+зареєструй routes через app.register(...)
+підключи globalErrorHandler через app.setErrorHandler(...)
+не змінюй /version
+не реєструй порожні routes
+
+!! Важливо:
+не переписувати існуючу архітектуру
+адаптуватися до вже існуючих exports і назв методів
+```
