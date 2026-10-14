@@ -1,6 +1,6 @@
 import { query } from '../db/database.js';
 import type { PoolClient } from 'pg';
-import type { Grade } from '../types/domain.js';
+import type { Grade, GradeView } from '../types/domain.js';
 
 interface GradeRow {
     id: string;
