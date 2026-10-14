@@ -1,6 +1,6 @@
 # AI Prompt History: Електронний журнал
 
-> **Date Exported:** 2026-10-14 10:49:31  
+> **Date Exported:** 2026-10-14 12:16:27  
 > **Source Session:** `a7b42e85cc7d9`  
 > **Link:** [https://share.gemini.google/DyALsNjPqonE](https://share.gemini.google/DyALsNjPqonE)
 
@@ -221,6 +221,15 @@ routes -> services --> repositories--> database.ts --> PostgreSQL
 
 ```text
 розпиши аудит: проблема N+1 в gradesServices, праничні значення оцінок (0, 101 і тп), поведінка на збоях (глобалеерорхендлер, withRetry)
+```
+
+---
+
+### Prompt 35
+
+```text
+для дефенс коротко треба розписати про виправлені моменти: 1. повторна оцінка за те саме заняття мовчки перезаписувала бал, хоча spec вимагає 409
+2. невалідний UUID у заголовку X-User-Id, path, query чи тілі запиту доходив до бд і давав 500 замість помилки клієнта
 ```
 
 ---
