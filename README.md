@@ -61,29 +61,63 @@ npm run lint
 ## Структура репозиторію
 
 ```text
-nodejs3/
+node3/
 ├── .husky/                     # Git-хуки (pre-commit, pre-push)
-├── ai/
-│   └── lab1/
+├── ai/                         # Матеріали та історія роботи з ШІ
+│   ├── lab1/
+│   └── lab2/
 │       └── prompts.md          # Логи та промпти взаємодії з ШІ
-├── docs/
-│   ├── adr/                    # Архітектурні рішення
-│   └── diagrams/
-│       └── er/                 # ER-діаграма бази даних
-├── src/
-│   ├── __tests__/              # Тести
-│   ├── repositories/           # Шар доступу до даних (PostgreSQL SQL-запити)
-│   ├── routes/                 # Обробка HTTP-запитів Fastify та маршрутизація
-│   ├── services/               # Бізнес-логіка та перевірка правил
-│   ├── types/                  # TypeScript типи та інтерфейси
-│   ├── app.js                  # Ініціалізація та конфігурація Fastify
-│   └── server.js               # Точка входу (запуск HTTP-сервера)
-├── standards/                  # Стандарти розробки, чеклисти та DoD
+├── db/                         # База даних: міграції та скрипти
+│   ├── migrations/
+│   │   └── 001_initial.sql     # Початкова міграція схеми БД
+│   ├── clear.sql               # Скрипт очищення таблиць
+│   └── seed.sql                # Початкові дані для заповнення (seed)
+├── docs/                       # Проєктна документація
+│   ├── adr/                    # Архітектурні рішення (Architectural Decision Records)
+│   ├── diagrams/               # Архітектурні діаграми
+│   └── api.md                  # Документація API ендпоінтів
+├── src/                        # Вихідний код бекенду (TypeScript)
+│   ├── __tests__/              # Модульні та інтеграційні тести
+│   ├── db/
+│   │   ├── database.ts         # Налаштування пулу підключення до PostgreSQL
+│   │   └── runSqlFile.ts       # Утиліта для виконання SQL-файлів
+│   ├── errors/
+│   │   └── appError.ts         # Кастомний клас бізнес-помилок з HTTP-статусами
+│   ├── middleware/
+│   │   ├── authenticateUserHook.ts # Хук перевірки заголовоку X-User-Id
+│   │   └── globalErrorHandler.ts   # Глобальний обробник помилок
+│   ├── repositories/           # Шар доступу до даних (SQL-запити)
+│   │   ├── gradesRepositories.ts
+│   │   ├── lessonsRepositories.ts
+│   │   ├── subjectsRepositories.ts
+│   │   └── usersRepositories.ts
+│   ├── routes/                 # HTTP-маршрути Fastify
+│   ├── schemas/                # Схеми валідації вхідних даних (Fastify schemas)
+│   ├── services/               # Бізнес-логіка та оркестрація
+│   │   ├── gradesServices.ts
+│   │   ├── lessonsServices.ts
+│   │   ├── subjectsServices.ts
+│   │   └── usersServices.ts
+│   ├── types/
+│   │   └── domain.ts           # Доменні типи та інтерфейси TypeScript
+│   ├── app.ts                  # Ініціалізація та конфігурація Fastify
+│   └── server.ts               # Точка входу (запуск HTTP-сервера)
+├── standards/                  # Стандарти розробки та чеклисти
+│   ├── adr_format.md
+│   ├── checks.md
+│   ├── definition_of_done.md
+│   └── spec_format.md
+├── .env.example                # Шаблон змінних середовища
+├── .gitignore                  # Ігноровані Git файли
+├── .prettierrc                 # Налаштування форматування Prettier
 ├── audit.md                    # Звіт з архітектурного аудиту
-├── Makefile                    # Команди автоматизації збірки/запуску
+├── eslint.config.js            # Конфігурація лінтера ESLint
+├── Makefile                    # Команди автоматизації збірки/запуску (`make check`, тощо)
+├── package-lock.json           # Фіксація версій пакетів npm
 ├── package.json                # Залежності та npm-скрипти
 ├── README.md                   # Головна документація проєкту
-└── spec.md                     # Інженерна специфікація проєкту
+├── spec.md                     # Інженерна специфікація проєкту
+└── tsconfig.json               # Конфігурація компілятора TypeScript
 ```
 
 ## Інші документи
