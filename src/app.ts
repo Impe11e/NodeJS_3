@@ -16,7 +16,14 @@ function getCommitSha() {
 }
 
 export function buildApp(opts = {}) {
-    const app = Fastify(opts);
+    const app = Fastify({
+        ...opts,
+        ajv: {
+            customOptions: {
+                removeAdditional: false,
+            },
+        },
+    });
 
     app.get('/version', async () => {
         return { sha: getCommitSha() };

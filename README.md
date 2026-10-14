@@ -27,10 +27,27 @@
 
 ## Запуск та перевірка
 
+В терміналі:
+
 ```bash
 git clone https://github.com/Impe11e/NodeJS_3.git
 cd NodeJS_3
 npm install
+copy .env.example .env
+```
+
+Задайте `DATABASE_URL` в `.env`:
+
+```env
+DATABASE_URL=postgres://db_user:db_password@localhost:5432/database_name
+PORT=3000
+```
+
+Далі в терміналі:
+
+```bash
+npm run db:migrate
+npm run db:seed
 npm start
 ```
 

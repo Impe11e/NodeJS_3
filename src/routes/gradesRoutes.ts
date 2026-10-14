@@ -1,6 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { authenticateUser } from '../middleware/authenticateUserHook.js';
 import { gradeService } from '../services/gradesServices.js';
+import { createGradeSchema } from '../schemas/gradesSchemas.js';
 
 interface CreateGradeBody {
     student_id: string;
@@ -18,22 +19,9 @@ const gradesRoutes: FastifyPluginAsync = async (app) => {
 
     app.post<{ Body: CreateGradeBody }>(
         '/grades',
-        {
-            schema: {
-                body: {
-                    type: 'object',
-                    required: ['student_id', 'lesson_id', 'score'],
-                    additionalProperties: false,
-                    properties: {
-                        student_id: { type: 'string', minLength: 1 },
-                        lesson_id: { type: 'string', minLength: 1 },
-                        score: { type: 'integer', minimum: 1, maximum: 100 },
-                    },
-                },
-            },
-        },
+        { schema: createGradeSchema },
         async (request, reply) => {
-            const grade = gradeService.create(
+            const grade = await gradeService.create(
                 request.user,
                 request.body.student_id,
                 request.body.lesson_id,
@@ -58,7 +46,7 @@ const gradesRoutes: FastifyPluginAsync = async (app) => {
     });
 
     app.get('/grades/average', async (request) => {
-        return { average_score: gradeService.averageForStudent(request.user) };
+        return { average_score: await gradeService.averageForStudent(request.user) };
     });
 };
 
