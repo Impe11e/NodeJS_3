@@ -10,6 +10,9 @@
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
         "test:smoke": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch=\"**/src/__tests__/**/*.smoke.test.js\"",
         "build": "tsc",
+        "db:migrate": "node --import tsx/esm src/db/runSqlFile.ts db/migrations/001_initial.sql",
+        "db:seed": "node --import tsx/esm src/db/runSqlFile.ts db/seed.sql",
+        "db:clear": "node --import tsx/esm src/db/runSqlFile.ts db/clear.sql",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
@@ -36,6 +39,7 @@
     "devDependencies": {
         "@eslint/js": "^9.0.0",
         "@types/node": "^26.6.4",
+        "@types/pg": "^8.23.1",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^9.1.0",
         "globals": "^15.0.0",
