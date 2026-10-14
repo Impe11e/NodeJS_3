@@ -3,14 +3,17 @@ import { subjectRepository } from '../repositories/subjectsRepositories.js';
 import type { Subject } from '../types/domain.js';
 
 export const subjectService = {
-    getById(id: string): Subject {
-        const subject = subjectRepository.findById(id);
+    async getById(id: string): Promise<Subject> {
+        const subject = await subjectRepository.findById(id);
         if (!subject) throw notFound('Subject not found');
         return subject;
     },
-    requireTeacherOfSubject(teacherId: string, subjectId: string): Subject {
-        const subject = this.getById(subjectId);
-        if (!subjectRepository.teacherLeadsSubject(teacherId, subjectId)) {
+    async requireTeacherOfSubject(
+        teacherId: string,
+        subjectId: string,
+    ): Promise<Subject> {
+        const subject = await this.getById(subjectId);
+        if (!(await subjectRepository.teacherLeadsSubject(teacherId, subjectId))) {
             throw forbidden('Teacher does not lead this subject');
         }
         return subject;

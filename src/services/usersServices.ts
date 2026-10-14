@@ -3,16 +3,16 @@ import { userRepository } from '../repositories/usersRepositories.js';
 import type { User } from '../types/domain.js';
 
 export const userService = {
-    getById(id: string): User {
-        const user = userRepository.findById(id);
+    async getById(id: string): Promise<User> {
+        const user = await userRepository.findById(id);
         if (!user) throw unauthorized('Unknown user');
         return user;
     },
-    getStudentsByGroupId(groupId: string): User[] {
+    async getStudentsByGroupId(groupId: string): Promise<User[]> {
         return userRepository.findStudentsByGroupId(groupId);
     },
-    requireStudent(id: string): User {
-        const user = this.getById(id);
+    async requireStudent(id: string): Promise<User> {
+        const user = await this.getById(id);
         if (user.role !== 'STUDENT') throw notFound('Student not found');
         return user;
     },

@@ -4,7 +4,7 @@ import { userService } from '../services/usersServices.js';
 
 declare module 'fastify' {
     interface FastifyRequest {
-        user: ReturnType<typeof userService.getById>;
+        user: Awaited<ReturnType<typeof userService.getById>>;
     }
 }
 
@@ -18,5 +18,5 @@ export async function authenticateUser(
         throw unauthorized('X-User-Id header is required');
     }
 
-    request.user = userService.getById(userId);
+    request.user = await userService.getById(userId);
 }
