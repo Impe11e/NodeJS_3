@@ -1,6 +1,6 @@
 # AI Prompt History: Електронний журнал
 
-> **Date Exported:** 2026-10-14 10:22:12  
+> **Date Exported:** 2026-10-14 10:49:31  
 > **Source Session:** `a7b42e85cc7d9`  
 > **Link:** [https://share.gemini.google/DyALsNjPqonE](https://share.gemini.google/DyALsNjPqonE)
 
@@ -213,6 +213,14 @@ routes -> services --> repositories--> database.ts --> PostgreSQL
 - зрозуміла обробка помилок 400, 401, 403, 404, 500 та 503,
 - retry для тимчасових помилок підключення,
 - ідемпотентність оцінки: в одного студента може бути лише одна оцінка за заняття, повторний запит має оновлювати її, а не створювати дублікат
+```
+
+---
+
+### Prompt 34
+
+```text
+розпиши аудит: проблема N+1 в gradesServices, праничні значення оцінок (0, 101 і тп), поведінка на збоях (глобалеерорхендлер, withRetry)
 ```
 
 ---
