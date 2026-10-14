@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { withTransaction } from '../db/database.js';
-import { badRequest, forbidden } from '../errors/appError.js';
+import { badRequest, conflict, forbidden } from '../errors/appError.js';
 import { gradeRepository } from '../repositories/gradesRepositories.js';
 import { lessonService } from './lessonsServices.js';
 import { subjectService } from './subjectsServices.js';
 import { userService } from './usersServices.js';
 import type { GradeView, LessonRoster, User } from '../types/domain.js';
+
 
 export const gradeService = {
     async create(teacher: User, studentId: string, lessonId: string, score: number) {
@@ -19,15 +20,17 @@ export const gradeService = {
         if (student.groupId !== lesson.groupId) {
             throw forbidden('Student is not in the lesson group');
         }
-        return withTransaction((client) =>
-            gradeRepository.upsert(client, {
-                id: randomUUID(),
-                studentId,
-                lessonId,
-                score,
-                createdAt: new Date().toISOString(),
-            }),
-        );
+        const created = await withTransaction((client) =>
+        gradeRepository.insert(client, {
+            id: randomUUID(),
+            studentId,
+            lessonId,
+            score,
+            createdAt: new Date().toISOString(),
+        }),
+    );
+if (!created) throw conflict('Grade for this student and lesson already exists');
+return created;
     },
 
     async openLesson(teacher: User, lessonId: string): Promise<LessonRoster> {

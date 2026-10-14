@@ -49,16 +49,15 @@ export const gradeRepository = {
             ? null
             : Number(result.rows[0].average_score);
     },
-    async upsert(client: PoolClient, grade: Grade): Promise<Grade> {
-        const result = await client.query<GradeRow>(
-            `INSERT INTO grades (id, student_id, lesson_id, score, created_at)
-             VALUES ($1, $2, $3, $4, $5)
-             ON CONFLICT (student_id, lesson_id)
-             DO UPDATE SET score = EXCLUDED.score
-             RETURNING id, student_id, lesson_id, score, created_at`,
-            [grade.id, grade.studentId, grade.lessonId, grade.score, grade.createdAt],
-        );
-        return mapGrade(result.rows[0]);
+    async insert(client: PoolClient, grade: Grade): Promise<Grade | undefined> {
+    const result = await client.query<GradeRow>(
+        `INSERT INTO grades (id, student_id, lesson_id, score, created_at)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (student_id, lesson_id) DO NOTHING
+         RETURNING id, student_id, lesson_id, score, created_at`,
+        [grade.id, grade.studentId, grade.lessonId, grade.score, grade.createdAt],
+    );
+    return result.rows[0] ? mapGrade(result.rows[0]) : undefined;
     },
     async findViewsByStudentId(
         studentId: string,

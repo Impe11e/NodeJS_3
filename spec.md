@@ -145,7 +145,7 @@
     INSERT INTO grades (id, student_id, lesson_id, score, created_at)
     VALUES ($1, $2, $3, $4, NOW())
     ON CONFLICT (student_id, lesson_id)
-    DO UPDATE SET score = EXCLUDED.score;
+    DO NOTHING RETURNING score = EXCLUDED.score;
     ```
 - **Очікувана відповідь:**
   **200 OK / 201 Created**
