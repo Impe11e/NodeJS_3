@@ -81,7 +81,7 @@
 
 # AI Prompt History: Електронний журнал
 
-> **Date Exported:** 2026-10-03 00:59:45  
+> **Date Exported:** 2026-10-12 22:17:45  
 > **Source Session:** `3f375b7535ddc297`  
 > **Link:** [https://share.gemini.google/aOfInWyWZvrJ](https://share.gemini.google/aOfInWyWZvrJ)
 
@@ -271,4 +271,10 @@ md формат
 
 ```text
 розпиши по скріну структуру репки?
+```
+
+### Prompt 24
+
+```text
+розпиши адр 0004 де описується вибір ESLint + Prettier + Husky/Hooks для перевірок у форматі маркдаун, стиль як і минулі адр
 ```

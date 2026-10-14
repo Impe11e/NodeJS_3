@@ -1,4 +1,4 @@
-import { buildApp } from '../app.js';
+import { buildApp } from '../../dist/app.js';
 
 describe('Smoke Test', () => {
     let app;
