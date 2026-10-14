@@ -43,9 +43,7 @@ async function withRetry<T>(operation: () => Promise<T>): Promise<T> {
         } catch (error) {
             lastError = error;
             if (!isTransientDatabaseError(error) || attempt === 2) {
-                throw isTransientDatabaseError(error)
-                    ? new DatabaseUnavailableError()
-                    : error;
+                throw isTransientDatabaseError(error) ? new DatabaseUnavailableError() : error;
             }
             await new Promise((resolve) => setTimeout(resolve, 50 * 2 ** attempt));
         }
@@ -55,13 +53,13 @@ async function withRetry<T>(operation: () => Promise<T>): Promise<T> {
 
 export function query<T extends QueryResultRow>(
     text: string,
-    values: unknown[] = [],
+    values: unknown[] = []
 ): Promise<{ rows: T[] }> {
     return withRetry(() => pool.query<T>(text, values));
 }
 
 export async function withTransaction<T>(
-    operation: (client: PoolClient) => Promise<T>,
+    operation: (client: PoolClient) => Promise<T>
 ): Promise<T> {
     return withRetry(async () => {
         const client = await pool.connect();

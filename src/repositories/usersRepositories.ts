@@ -16,7 +16,7 @@ export const userRepository = {
     async findById(id: string): Promise<User | undefined> {
         const result = await query<UserRow>(
             'SELECT id, name, role, group_id FROM users WHERE id = $1',
-            [id],
+            [id]
         );
         return result.rows[0] ? mapUser(result.rows[0]) : undefined;
     },
@@ -26,7 +26,7 @@ export const userRepository = {
              FROM users
              WHERE role = 'STUDENT' AND group_id = $1
              ORDER BY name, id`,
-            [groupId],
+            [groupId]
         );
         return result.rows.map(mapUser);
     },

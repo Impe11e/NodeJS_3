@@ -1,7 +1,7 @@
 .PHONY: check test lint format-check build smoke-test clean install
 
 # Запуск усіх перевірок якості коду та тестів
-check: install format-check lint test
+check: install format-check lint build test
 
 # Запуск автотестів
 test:

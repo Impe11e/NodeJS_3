@@ -4,7 +4,7 @@ import { AppError } from '../errors/appError.js';
 export function globalErrorHandler(
     error: FastifyError,
     request: FastifyRequest,
-    reply: FastifyReply,
+    reply: FastifyReply
 ) {
     if (error instanceof AppError) {
         return reply.code(error.statusCode).send({ error: error.message });

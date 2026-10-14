@@ -7,7 +7,6 @@ import { subjectService } from './subjectsServices.js';
 import { userService } from './usersServices.js';
 import type { GradeView, LessonRoster, User } from '../types/domain.js';
 
-
 export const gradeService = {
     async create(teacher: User, studentId: string, lessonId: string, score: number) {
         if (teacher.role !== 'TEACHER') throw forbidden('Only teachers can assign grades');
@@ -21,25 +20,22 @@ export const gradeService = {
             throw forbidden('Student is not in the lesson group');
         }
         const created = await withTransaction((client) =>
-        gradeRepository.insert(client, {
-            id: randomUUID(),
-            studentId,
-            lessonId,
-            score,
-            createdAt: new Date().toISOString(),
-        }),
-    );
-if (!created) throw conflict('Grade for this student and lesson already exists');
-return created;
+            gradeRepository.insert(client, {
+                id: randomUUID(),
+                studentId,
+                lessonId,
+                score,
+                createdAt: new Date().toISOString(),
+            })
+        );
+        if (!created) throw conflict('Grade for this student and lesson already exists');
+        return created;
     },
 
     async openLesson(teacher: User, lessonId: string): Promise<LessonRoster> {
         if (teacher.role !== 'TEACHER') throw forbidden('Only teachers can open lessons');
         const lesson = await lessonService.getById(lessonId);
-        const subject = await subjectService.requireTeacherOfSubject(
-            teacher.id,
-            lesson.subjectId,
-        );
+        const subject = await subjectService.requireTeacherOfSubject(teacher.id, lesson.subjectId);
         const students = await userService.getStudentsByGroupId(lesson.groupId);
         return {
             lesson_id: lesson.id,
@@ -55,10 +51,10 @@ return created;
     async listForStudent(
         student: User,
         subjectId?: string,
-        lessonId?: string,
+        lessonId?: string
     ): Promise<GradeView[]> {
         if (student.role !== 'STUDENT') throw forbidden('Only students can view grades');
-        
+
         if (subjectId) await subjectService.getById(subjectId);
         if (lessonId) await lessonService.getById(lessonId);
 

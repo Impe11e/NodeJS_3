@@ -25,7 +25,7 @@ const gradesRoutes: FastifyPluginAsync = async (app) => {
                 request.user,
                 request.body.student_id,
                 request.body.lesson_id,
-                request.body.score,
+                request.body.score
             );
             return reply.code(201).send({
                 id: grade.id,
@@ -34,16 +34,20 @@ const gradesRoutes: FastifyPluginAsync = async (app) => {
                 score: grade.score,
                 created_at: grade.createdAt,
             });
-        },
+        }
     );
 
-    app.get<{ Querystring: GradeQuery }>('/grades', { schema: listGradesSchema }, async (request) => {
-        return gradeService.listForStudent(
-            request.user,
-            request.query.subject_id,
-            request.query.lesson_id,
-        );
-    });
+    app.get<{ Querystring: GradeQuery }>(
+        '/grades',
+        { schema: listGradesSchema },
+        async (request) => {
+            return gradeService.listForStudent(
+                request.user,
+                request.query.subject_id,
+                request.query.lesson_id
+            );
+        }
+    );
 
     app.get('/grades/average', async (request) => {
         return { average_score: await gradeService.averageForStudent(request.user) };

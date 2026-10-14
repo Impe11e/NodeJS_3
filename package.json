@@ -2,7 +2,7 @@
     "name": "electronic-journal",
     "version": "1.0.0",
     "description": "Електронний журнал — навчальний бекенд-застосунок для обліку оцінок студентів",
-    "main": "src/server.js",
+    "main": "dist/server.js",
     "type": "module",
     "scripts": {
         "start": "node dist/server.js",
@@ -10,6 +10,7 @@
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
         "test:smoke": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch=\"**/src/__tests__/**/*.smoke.test.js\"",
         "build": "tsc",
+        "pretest": "npm run build",
         "db:migrate": "node --import tsx/esm src/db/runSqlFile.ts db/migrations/001_initial.sql",
         "db:seed": "node --import tsx/esm src/db/runSqlFile.ts db/seed.sql",
         "db:clear": "node --import tsx/esm src/db/runSqlFile.ts db/clear.sql",
@@ -20,7 +21,7 @@
         "prepare": "husky"
     },
     "lint-staged": {
-        "*.js": [
+        "*.{js,ts,tsx}": [
             "prettier --write",
             "eslint --fix"
         ],
@@ -48,6 +49,7 @@
         "lint-staged": "^15.2.2",
         "prettier": "^3.9.9",
         "tsx": "^4.23.15",
-        "typescript": "^7.0.2"
+        "typescript": "5.9",
+        "typescript-eslint": "^8.71.2"
     }
 }

@@ -8,10 +8,7 @@ export const subjectService = {
         if (!subject) throw notFound('Subject not found');
         return subject;
     },
-    async requireTeacherOfSubject(
-        teacherId: string,
-        subjectId: string,
-    ): Promise<Subject> {
+    async requireTeacherOfSubject(teacherId: string, subjectId: string): Promise<Subject> {
         const subject = await this.getById(subjectId);
         if (!(await subjectRepository.teacherLeadsSubject(teacherId, subjectId))) {
             throw forbidden('Teacher does not lead this subject');

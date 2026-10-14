@@ -11,10 +11,10 @@ const lessonsRoutes: FastifyPluginAsync = async (app) => {
     app.addHook('preHandler', authenticateUser);
 
     app.get<{ Params: LessonParams }>(
-    '/lessons/:lessonId',
-    { schema: lessonParamsSchema },
-    async (request) => gradeService.openLesson(request.user, request.params.lessonId),
-);
+        '/lessons/:lessonId',
+        { schema: lessonParamsSchema },
+        async (request) => gradeService.openLesson(request.user, request.params.lessonId)
+    );
 };
 
 export default lessonsRoutes;
