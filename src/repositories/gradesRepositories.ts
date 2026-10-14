@@ -10,6 +10,16 @@ interface GradeRow {
     created_at: string;
 }
 
+interface GradeWithDetailsRow {
+    grade_id: string;
+    score: number;
+    created_at: string;
+    lesson_id: string;
+    lesson_date: string;
+    subject_id: string;
+    subject_name: string;
+}
+
 function mapGrade(row: GradeRow): Grade {
     return {
         id: row.id,
@@ -49,5 +59,48 @@ export const gradeRepository = {
             [grade.id, grade.studentId, grade.lessonId, grade.score, grade.createdAt],
         );
         return mapGrade(result.rows[0]);
+    },
+    async findViewsByStudentId(
+        studentId: string,
+        filters?: { subjectId?: string; lessonId?: string }
+    ): Promise<GradeView[]> {
+        let sql = `
+            SELECT 
+                g.id AS grade_id,
+                g.score AS score,
+                g.created_at AS created_at,
+                l.id AS lesson_id,
+                l.date AS lesson_date,
+                s.id AS subject_id,
+                s.name AS subject_name
+            FROM grades g
+            JOIN lessons l ON g.lesson_id = l.id
+            JOIN subjects s ON l.subject_id = s.id
+            WHERE g.student_id = $1
+        `;
+
+        const params: any[] = [studentId];
+
+        if (filters?.subjectId) {
+            params.push(filters.subjectId);
+            sql += ` AND s.id = $${params.length}`;
+        }
+
+        if (filters?.lessonId) {
+            params.push(filters.lessonId);
+            sql += ` AND l.id = $${params.length}`;
+        }
+
+        sql += ` ORDER BY g.created_at, g.id`;
+
+        const result = await query<GradeWithDetailsRow>(sql, params);
+
+        return result.rows.map((row) => ({
+            grade_id: row.grade_id,
+            score: row.score,
+            created_at: new Date(row.created_at).toISOString(),
+            lesson_date: row.lesson_date,
+            subject_name: row.subject_name,
+        }));
     },
 };

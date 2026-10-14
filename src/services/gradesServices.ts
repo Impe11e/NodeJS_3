@@ -55,28 +55,14 @@ export const gradeService = {
         lessonId?: string,
     ): Promise<GradeView[]> {
         if (student.role !== 'STUDENT') throw forbidden('Only students can view grades');
+        
         if (subjectId) await subjectService.getById(subjectId);
         if (lessonId) await lessonService.getById(lessonId);
-        const grades = await gradeRepository.findByStudentId(student.id);
-        const result: GradeView[] = [];
-        for (const grade of grades) {
-            const lesson = await lessonService.getById(grade.lessonId);
-            if (
-                (subjectId && lesson.subjectId !== subjectId) ||
-                (lessonId && lesson.id !== lessonId)
-            ) {
-                continue;
-            }
-            const subject = await subjectService.getById(lesson.subjectId);
-            result.push({
-                grade_id: grade.id,
-                score: grade.score,
-                created_at: grade.createdAt,
-                lesson_date: lesson.date,
-                subject_name: subject.name,
-            });
-        }
-        return result;
+
+        return gradeRepository.findViewsByStudentId(student.id, {
+            subjectId,
+            lessonId,
+        });
     },
 
     async averageForStudent(student: User): Promise<number | null> {
