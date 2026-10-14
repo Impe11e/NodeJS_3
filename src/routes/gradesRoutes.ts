@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { authenticateUser } from '../middleware/authenticateUserHook.js';
 import { gradeService } from '../services/gradesServices.js';
-import { createGradeSchema } from '../schemas/gradesSchemas.js';
+import { createGradeSchema, listGradesSchema } from '../schemas/gradesSchemas.js';
 
 interface CreateGradeBody {
     student_id: string;
@@ -37,7 +37,7 @@ const gradesRoutes: FastifyPluginAsync = async (app) => {
         },
     );
 
-    app.get<{ Querystring: GradeQuery }>('/grades', async (request) => {
+    app.get<{ Querystring: GradeQuery }>('/grades', { schema: listGradesSchema }, async (request) => {
         return gradeService.listForStudent(
             request.user,
             request.query.subject_id,
