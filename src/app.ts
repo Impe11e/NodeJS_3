@@ -2,8 +2,8 @@ import { execSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
 import Fastify from 'fastify';
-import gradesRoutes from './routes/gradesRoutes.js';
-import lessonsRoutes from './routes/lessonsRoutes.js';
+import gradesRoutes from './routes/grades.routes.js';
+import lessonsRoutes from './routes/lessons.routes.js';
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
 import { runWithLogger, setBaseLogger } from './logger/requestContext.js';
 

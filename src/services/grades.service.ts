@@ -2,10 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { withTransaction } from '../db/database.js';
 import { badRequest, conflict, forbidden } from '../errors/appError.js';
 import { getLogger } from '../logger/requestContext.js';
-import { gradeRepository } from '../repositories/gradesRepositories.js';
-import { lessonService } from './lessonsServices.js';
-import { subjectService } from './subjectsServices.js';
-import { userService } from './usersServices.js';
+import { gradeRepository } from '../repositories/grades.repository.js';
+import { lessonService } from './lessons.service.js';
+import { subjectService } from './subjects.service.js';
+import { userService } from './users.service.js';
 import type { GradeView, LessonRoster, User } from '../types/domain.js';
 
 export const gradeService = {

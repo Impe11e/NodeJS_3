@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { unauthorized } from '../errors/appError.js';
-import { userService } from '../services/usersServices.js';
+import { userService } from '../services/users.service.js';
 
 declare module 'fastify' {
     interface FastifyRequest {

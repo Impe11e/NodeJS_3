@@ -87,17 +87,17 @@ node3/
 │   │   ├── authenticateUserHook.ts # Хук перевірки заголовоку X-User-Id
 │   │   └── globalErrorHandler.ts   # Глобальний обробник помилок
 │   ├── repositories/           # Шар доступу до даних (SQL-запити)
-│   │   ├── gradesRepositories.ts
-│   │   ├── lessonsRepositories.ts
-│   │   ├── subjectsRepositories.ts
-│   │   └── usersRepositories.ts
+│   │   ├── grades.repository.ts
+│   │   ├── lessons.repository.ts
+│   │   ├── subjects.repository.ts
+│   │   └── users.repository.ts
 │   ├── routes/                 # HTTP-маршрути Fastify
 │   ├── schemas/                # Схеми валідації вхідних даних (Fastify schemas)
 │   ├── services/               # Бізнес-логіка та оркестрація
-│   │   ├── gradesServices.ts
-│   │   ├── lessonsServices.ts
-│   │   ├── subjectsServices.ts
-│   │   └── usersServices.ts
+│   │   ├── grades.service.ts
+│   │   ├── lessons.service.ts
+│   │   ├── subjects.service.ts
+│   │   └── users.service.ts
 │   ├── types/
 │   │   └── domain.ts           # Доменні типи та інтерфейси TypeScript
 │   ├── app.ts                  # Ініціалізація та конфігурація Fastify

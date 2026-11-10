@@ -1,6 +1,6 @@
 import { forbidden, notFound } from '../errors/appError.js';
 import { getLogger } from '../logger/requestContext.js';
-import { subjectRepository } from '../repositories/subjectsRepositories.js';
+import { subjectRepository } from '../repositories/subjects.repository.js';
 import type { Subject } from '../types/domain.js';
 
 export const subjectService = {

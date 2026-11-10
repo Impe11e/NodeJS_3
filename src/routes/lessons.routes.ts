@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { authenticateUser } from '../middleware/authenticateUserHook.js';
-import { gradeService } from '../services/gradesServices.js';
-import { lessonParamsSchema } from '../schemas/gradesSchemas.js';
+import { gradeService } from '../services/grades.service.js';
+import { lessonParamsSchema } from '../schemas/grades.schema.js';
 
 interface LessonParams {
     lessonId: string;

@@ -1,5 +1,5 @@
 import { unauthorized, notFound } from '../errors/appError.js';
-import { userRepository } from '../repositories/usersRepositories.js';
+import { userRepository } from '../repositories/users.repository.js';
 import type { User } from '../types/domain.js';
 
 export const userService = {
