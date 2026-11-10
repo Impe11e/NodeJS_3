@@ -1,0 +1,59 @@
+services:
+    db:
+        image: postgres:17
+        environment:
+            POSTGRES_USER: journal
+            POSTGRES_PASSWORD: journal
+            POSTGRES_DB: journal
+        ports:
+            - '127.0.0.1::5432'
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U journal -d journal']
+            interval: 2s
+            timeout: 3s
+            retries: 30
+
+    migrate:
+        build:
+            context: .
+            args:
+                GIT_COMMIT_SHA: ${GIT_COMMIT_SHA:-unknown}
+        command:
+            - sh
+            - -c
+            - node dist/db/runSqlFile.js db/migrations/001_initial.sql && node dist/db/runSqlFile.js db/seed.sql
+        environment:
+            DATABASE_URL: postgres://journal:journal@db:5432/journal
+        depends_on:
+            db:
+                condition: service_healthy
+
+    app:
+        build:
+            context: .
+            args:
+                GIT_COMMIT_SHA: ${GIT_COMMIT_SHA:-unknown}
+        environment:
+            DATABASE_URL: postgres://journal:journal@db:5432/journal
+            PORT: 3000
+            LOG_LEVEL: ${LOG_LEVEL:-info}
+        depends_on:
+            migrate:
+                condition: service_completed_successfully
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.${COMPOSE_PROJECT_NAME:-node3}.rule=Host(`${APP_HOST:-node3.localhost}`)
+            - traefik.http.routers.${COMPOSE_PROJECT_NAME:-node3}.entrypoints=web
+            - traefik.http.services.${COMPOSE_PROJECT_NAME:-node3}.loadbalancer.server.port=3000
+        networks:
+            - default
+            - traefik
+
+volumes:
+    db-data:
+
+networks:
+    traefik:
+        external: true
