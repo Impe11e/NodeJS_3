@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
     // Ігноровані шляхи
@@ -36,6 +37,32 @@ export default [
             globals: {
                 ...globals.jest,
             },
+        },
+    },
+    // TypeScript-файли
+    ...tseslint.configs.recommended.map((config) => ({
+        ...config,
+        files: ['**/*.ts'],
+    })),
+    {
+        files: ['**/*.ts'],
+        languageOptions: {
+            globals: { ...globals.node },
+        },
+        rules: {
+            'no-console': 'error',
+            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+            'no-var': 'error',
+            'prefer-const': 'error',
+            eqeqeq: ['error', 'always'],
+        },
+    },
+
+    // Шари: routes не звертаються до repositories напряму
+    {
+        files: ['src/routes/**/*.ts'],
+        rules: {
+            'no-restricted-imports': ['error', { patterns: ['**/repositories/**'] }],
         },
     },
 
