@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { buildApp } from './app.js';
 import { closeDatabase, initDatabase, loadDbConfig } from './db/database.js';
 
-const app = buildApp({ logger: true });
+const app = buildApp({ logger: { level: process.env.LOG_LEVEL ?? 'info' } });
 const PORT = process.env.PORT || 3000;
 
 app.addHook('onClose', async () => {

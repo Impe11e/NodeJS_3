@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { withTransaction } from '../db/database.js';
 import { badRequest, conflict, forbidden } from '../errors/appError.js';
+import { getLogger } from '../logger/requestContext.js';
 import { gradeRepository } from '../repositories/gradesRepositories.js';
 import { lessonService } from './lessonsServices.js';
 import { subjectService } from './subjectsServices.js';
@@ -17,6 +18,7 @@ export const gradeService = {
         await subjectService.requireTeacherOfSubject(teacher.id, lesson.subjectId);
         const student = await userService.requireStudent(studentId);
         if (student.groupId !== lesson.groupId) {
+            getLogger().warn({ studentId, lessonId }, 'Student is not in the lesson group');
             throw forbidden('Student is not in the lesson group');
         }
         const created = await withTransaction((client) =>
@@ -28,7 +30,14 @@ export const gradeService = {
                 createdAt: new Date().toISOString(),
             })
         );
-        if (!created) throw conflict('Grade for this student and lesson already exists');
+        if (!created) {
+            getLogger().warn({ studentId, lessonId }, 'Grade already exists');
+            throw conflict('Grade for this student and lesson already exists');
+        }
+        getLogger().info(
+            { gradeId: created.id, teacherId: teacher.id, studentId, lessonId, score },
+            'Grade created'
+        );
         return created;
     },
 
@@ -37,6 +46,10 @@ export const gradeService = {
         const lesson = await lessonService.getById(lessonId);
         const subject = await subjectService.requireTeacherOfSubject(teacher.id, lesson.subjectId);
         const students = await userService.getStudentsByGroupId(lesson.groupId);
+        getLogger().info(
+            { lessonId, teacherId: teacher.id, studentCount: students.length },
+            'Lesson opened'
+        );
         return {
             lesson_id: lesson.id,
             date: lesson.date,

@@ -1,4 +1,5 @@
 import { query } from '../db/database.js';
+import { sql } from '../db/sql.js';
 import type { PoolClient } from 'pg';
 import type { Grade, GradeView } from '../types/domain.js';
 
@@ -33,16 +34,15 @@ function mapGrade(row: GradeRow): Grade {
 export const gradeRepository = {
     async findByStudentId(studentId: string): Promise<Grade[]> {
         const result = await query<GradeRow>(
-            `SELECT id, student_id, lesson_id, score, created_at
-             FROM grades WHERE student_id = $1 ORDER BY created_at, id`,
-            [studentId]
+            sql`SELECT id, student_id, lesson_id, score, created_at
+                FROM grades WHERE student_id = ${studentId} ORDER BY created_at, id`
         );
         return result.rows.map(mapGrade);
     },
     async averageByStudentId(studentId: string): Promise<number | null> {
         const result = await query<{ average_score: string | null }>(
-            'SELECT ROUND(AVG(score)::numeric, 2)::text AS average_score FROM grades WHERE student_id = $1',
-            [studentId]
+            sql`SELECT ROUND(AVG(score)::numeric, 2)::text AS average_score
+                FROM grades WHERE student_id = ${studentId}`
         );
         return result.rows[0]?.average_score === null || result.rows[0]?.average_score === undefined
             ? null
@@ -50,11 +50,10 @@ export const gradeRepository = {
     },
     async insert(client: PoolClient, grade: Grade): Promise<Grade | undefined> {
         const result = await client.query<GradeRow>(
-            `INSERT INTO grades (id, student_id, lesson_id, score, created_at)
-         VALUES ($1, $2, $3, $4, $5)
-         ON CONFLICT (student_id, lesson_id) DO NOTHING
-         RETURNING id, student_id, lesson_id, score, created_at`,
-            [grade.id, grade.studentId, grade.lessonId, grade.score, grade.createdAt]
+            sql`INSERT INTO grades (id, student_id, lesson_id, score, created_at)
+                VALUES (${grade.id}, ${grade.studentId}, ${grade.lessonId}, ${grade.score}, ${grade.createdAt})
+                ON CONFLICT (student_id, lesson_id) DO NOTHING
+                RETURNING id, student_id, lesson_id, score, created_at`
         );
         return result.rows[0] ? mapGrade(result.rows[0]) : undefined;
     },
@@ -62,8 +61,11 @@ export const gradeRepository = {
         studentId: string,
         filters?: { subjectId?: string; lessonId?: string }
     ): Promise<GradeView[]> {
-        let sql = `
-            SELECT 
+        const subjectFilter = filters?.subjectId ? sql`AND s.id = ${filters.subjectId}` : sql``;
+        const lessonFilter = filters?.lessonId ? sql`AND l.id = ${filters.lessonId}` : sql``;
+
+        const result = await query<GradeWithDetailsRow>(sql`
+            SELECT
                 g.id AS grade_id,
                 g.score AS score,
                 g.created_at AS created_at,
@@ -74,24 +76,11 @@ export const gradeRepository = {
             FROM grades g
             JOIN lessons l ON g.lesson_id = l.id
             JOIN subjects s ON l.subject_id = s.id
-            WHERE g.student_id = $1
-        `;
-
-        const params: unknown[] = [studentId];
-
-        if (filters?.subjectId) {
-            params.push(filters.subjectId);
-            sql += ` AND s.id = $${params.length}`;
-        }
-
-        if (filters?.lessonId) {
-            params.push(filters.lessonId);
-            sql += ` AND l.id = $${params.length}`;
-        }
-
-        sql += ` ORDER BY g.created_at, g.id`;
-
-        const result = await query<GradeWithDetailsRow>(sql, params);
+            WHERE g.student_id = ${studentId}
+            ${subjectFilter}
+            ${lessonFilter}
+            ORDER BY g.created_at, g.id
+        `);
 
         return result.rows.map((row) => ({
             grade_id: row.grade_id,

@@ -1,4 +1,5 @@
 import { query } from '../db/database.js';
+import { sql } from '../db/sql.js';
 import type { Lesson } from '../types/domain.js';
 
 interface LessonRow {
@@ -20,15 +21,13 @@ function mapLesson(row: LessonRow): Lesson {
 export const lessonRepository = {
     async findById(id: string): Promise<Lesson | undefined> {
         const result = await query<LessonRow>(
-            'SELECT id, group_id, subject_id, date FROM lessons WHERE id = $1',
-            [id]
+            sql`SELECT id, group_id, subject_id, date FROM lessons WHERE id = ${id}`
         );
         return result.rows[0] ? mapLesson(result.rows[0]) : undefined;
     },
     async findBySubjectId(subjectId: string): Promise<Lesson[]> {
         const result = await query<LessonRow>(
-            'SELECT id, group_id, subject_id, date FROM lessons WHERE subject_id = $1',
-            [subjectId]
+            sql`SELECT id, group_id, subject_id, date FROM lessons WHERE subject_id = ${subjectId}`
         );
         return result.rows.map(mapLesson);
     },
