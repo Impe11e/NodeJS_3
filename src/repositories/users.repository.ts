@@ -1,4 +1,5 @@
 import { query } from '../db/database.js';
+import { sql } from '../db/sql.js';
 import type { User } from '../types/domain.js';
 
 interface UserRow {
@@ -15,18 +16,16 @@ function mapUser(row: UserRow): User {
 export const userRepository = {
     async findById(id: string): Promise<User | undefined> {
         const result = await query<UserRow>(
-            'SELECT id, name, role, group_id FROM users WHERE id = $1',
-            [id]
+            sql`SELECT id, name, role, group_id FROM users WHERE id = ${id}`
         );
         return result.rows[0] ? mapUser(result.rows[0]) : undefined;
     },
     async findStudentsByGroupId(groupId: string): Promise<User[]> {
         const result = await query<UserRow>(
-            `SELECT id, name, role, group_id
-             FROM users
-             WHERE role = 'STUDENT' AND group_id = $1
-             ORDER BY name, id`,
-            [groupId]
+            sql`SELECT id, name, role, group_id
+                FROM users
+                WHERE role = 'STUDENT' AND group_id = ${groupId}
+                ORDER BY name, id`
         );
         return result.rows.map(mapUser);
     },

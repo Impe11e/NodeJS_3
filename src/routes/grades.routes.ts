@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { authenticateUser } from '../middleware/authenticateUserHook.js';
-import { gradeService } from '../services/gradesServices.js';
-import { createGradeSchema, listGradesSchema } from '../schemas/gradesSchemas.js';
+import { gradeService } from '../services/grades.service.js';
+import { createGradeSchema, listGradesSchema } from '../schemas/grades.schema.js';
 
 interface CreateGradeBody {
     student_id: string;

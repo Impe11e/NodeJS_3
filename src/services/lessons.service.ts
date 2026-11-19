@@ -1,5 +1,5 @@
 import { notFound } from '../errors/appError.js';
-import { lessonRepository } from '../repositories/lessonsRepositories.js';
+import { lessonRepository } from '../repositories/lessons.repository.js';
 import type { Lesson } from '../types/domain.js';
 
 export const lessonService = {
