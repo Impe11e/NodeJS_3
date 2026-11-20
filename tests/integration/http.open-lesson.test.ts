@@ -5,6 +5,7 @@ import {
     asUser,
     expectError,
     INVALID_ID,
+    invalidIdCases,
     unauthorizedCases,
     UNKNOWN_ID,
     useApp,
@@ -19,7 +20,11 @@ beforeEach(async () => {
 });
 
 function openLesson(userId: string | undefined, lessonId: string) {
-    return request({ method: 'GET', url: `/lessons/${lessonId}`, headers: asUser(userId) });
+    return request({
+        method: 'GET',
+        url: `/lessons/${encodeURIComponent(lessonId)}`,
+        headers: asUser(userId),
+    });
 }
 
 describe('GET /lessons/:lessonId — успіх', () => {
@@ -60,10 +65,8 @@ describe('GET /lessons/:lessonId — успіх', () => {
 });
 
 describe('GET /lessons/:lessonId — помилки', () => {
-    test('lessonId не UUID — 400', async () => {
-        const response = await expectDatabaseUnchanged(() =>
-            openLesson(world.teacher.id, INVALID_ID)
-        );
+    test.each(invalidIdCases)('lessonId %s — 400', async (_label, id) => {
+        const response = await expectDatabaseUnchanged(() => openLesson(world.teacher.id, id));
 
         expectError(response, 400);
     });

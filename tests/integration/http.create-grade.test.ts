@@ -5,6 +5,7 @@ import {
     asUser,
     expectError,
     INVALID_ID,
+    invalidIdCases,
     ISO_DATE_RE,
     unauthorizedCases,
     UNKNOWN_ID,
@@ -55,6 +56,20 @@ describe('POST /grades — успіх', () => {
             },
         ]);
     });
+
+    test('id у верхньому регістрі — 201, оцінка в БД', async () => {
+        const response = await postGrade(
+            world.teacher.id.toUpperCase(),
+            validBody({
+                student_id: world.student.id.toUpperCase(),
+                lesson_id: world.lessonId.toUpperCase(),
+            })
+        );
+
+        expect(response.statusCode).toBe(201);
+        const rows = await testPool.query('SELECT student_id, lesson_id FROM grades');
+        expect(rows.rows).toEqual([{ student_id: world.student.id, lesson_id: world.lessonId }]);
+    });
 });
 
 describe('POST /grades — 400', () => {
@@ -64,8 +79,10 @@ describe('POST /grades — 400', () => {
         ['дріб', { score: 50.5 }],
         ['рядок замість числа', { score: '50' }],
         ['boolean замість числа', { score: true }],
-        ['student_id не UUID', { student_id: INVALID_ID }],
-        ['lesson_id не UUID', { lesson_id: INVALID_ID }],
+        ...invalidIdCases.flatMap(([label, id]): Array<[string, Record<string, unknown>]> => [
+            [`student_id ${label}`, { student_id: id }],
+            [`lesson_id ${label}`, { lesson_id: id }],
+        ]),
     ])('%s — 400, дані не змінились', async (_label, overrides) => {
         const response = await expectDatabaseUnchanged(() =>
             postGrade(world.teacher.id, validBody(overrides))

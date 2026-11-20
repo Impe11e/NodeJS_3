@@ -4,7 +4,7 @@ import { createGrade, createWorld, type World } from './helpers/factory.js';
 import {
     asUser,
     expectError,
-    INVALID_ID,
+    invalidIdCases,
     unauthorizedCases,
     UNKNOWN_ID,
     useApp,
@@ -111,10 +111,12 @@ describe('GET /grades — успіх', () => {
 });
 
 describe('GET /grades — помилки', () => {
-    test.each([
-        ['subject_id не UUID', { subject_id: INVALID_ID }],
-        ['lesson_id не UUID', { lesson_id: INVALID_ID }],
-    ])('%s — 400', async (_label, query) => {
+    test.each(
+        invalidIdCases.flatMap(([label, id]): Array<[string, Record<string, string>]> => [
+            [`subject_id ${label}`, { subject_id: id }],
+            [`lesson_id ${label}`, { lesson_id: id }],
+        ])
+    )('%s — 400', async (_label, query) => {
         const response = await expectDatabaseUnchanged(() => listGrades(world.student.id, query));
 
         expectError(response, 400);
