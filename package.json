@@ -11,6 +11,7 @@
         "test:unit": "vitest run --project unit",
         "test:smoke": "vitest run --project smoke",
         "test:integration": "node scripts/run-tests.mjs integration",
+        "test:e2e": "node scripts/run-tests.mjs e2e",
         "test:all": "node scripts/run-tests.mjs",
         "test:coverage": "vitest run --coverage",
         "typecheck:tests": "tsc -p tests/tsconfig.json",

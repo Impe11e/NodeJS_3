@@ -16,3 +16,22 @@ services:
             interval: 1s
             timeout: 3s
             retries: 60
+
+    app:
+        build:
+            context: .
+            args:
+                GIT_COMMIT_SHA: ${GIT_COMMIT_SHA:-unknown}
+        environment:
+            DATABASE_URL: postgres://journal:journal@db:5432/journal
+            PORT: 3000
+        ports:
+            - '127.0.0.1::3000'
+        depends_on:
+            db:
+                condition: service_healthy
+        healthcheck:
+            test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/version || exit 1']
+            interval: 1s
+            timeout: 3s
+            retries: 60
