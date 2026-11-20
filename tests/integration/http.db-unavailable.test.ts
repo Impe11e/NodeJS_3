@@ -2,8 +2,8 @@ import { createServer, type Server, type Socket } from 'node:net';
 import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, beforeEach, describe, test } from 'vitest';
 import { closeDatabase, initDatabase } from '../../src/db/database.js';
-import { expectDatabaseUnchanged } from './helpers/db.js';
-import { createWorld, type World } from './helpers/factory.js';
+import { expectDatabaseUnchanged } from '../helpers/db.js';
+import { createWorld, type World } from '../helpers/factory.js';
 import { asUser, expectError, useApp } from './helpers/app.js';
 
 const { request } = useApp();

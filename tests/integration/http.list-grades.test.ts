@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import { expectDatabaseUnchanged } from './helpers/db.js';
-import { createGrade, createWorld, type World } from './helpers/factory.js';
+import { expectDatabaseUnchanged } from '../helpers/db.js';
+import { createGrade, createWorld, type World } from '../helpers/factory.js';
 import {
     asUser,
     expectError,
+    INVALID_ID,
     invalidIdCases,
     unauthorizedCases,
     UNKNOWN_ID,
@@ -127,6 +128,17 @@ describe('GET /grades — помилки', () => {
 
         expectError(response, 401);
     });
+
+    test.each(unauthorizedCases)(
+        '%s і subject_id не UUID — 401 має пріоритет над 400',
+        async (_label, userId) => {
+            const response = await expectDatabaseUnchanged(() =>
+                listGrades(userId, { subject_id: INVALID_ID })
+            );
+
+            expectError(response, 401);
+        }
+    );
 
     test('не студент — 403', async () => {
         const response = await expectDatabaseUnchanged(() => listGrades(world.teacher.id));

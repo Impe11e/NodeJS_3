@@ -5,14 +5,14 @@ import { expect } from 'vitest';
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-    throw new Error('DATABASE_URL is not set: run integration tests via npm run test:integration');
+    throw new Error('DATABASE_URL is not set: run tests via npm run test:all');
 }
 
 export const testPool = new Pool({ connectionString, max: 2 });
 
 const TABLES = ['groups', 'users', 'subjects', 'teacher_subjects', 'lessons', 'grades'] as const;
 
-const clearSql = await readFile(new URL('../../../db/clear.sql', import.meta.url), 'utf8');
+const clearSql = await readFile(new URL('../../db/clear.sql', import.meta.url), 'utf8');
 
 export async function resetDatabase(): Promise<void> {
     await testPool.query(clearSql);

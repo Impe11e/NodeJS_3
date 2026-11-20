@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { closeTestPool, resetDatabase, testPool } from '../integration/helpers/db.js';
-import { createWorld, type World } from '../integration/helpers/factory.js';
+import { closeTestPool, resetDatabase, testPool } from '../helpers/db.js';
+import { createWorld, type World } from '../helpers/factory.js';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;

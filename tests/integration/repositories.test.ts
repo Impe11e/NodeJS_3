@@ -3,14 +3,14 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { withTransaction } from '../../src/db/database.js';
 import { gradeRepository } from '../../src/repositories/grades.repository.js';
 import { userRepository } from '../../src/repositories/users.repository.js';
-import { countGrades, testPool } from './helpers/db.js';
+import { countGrades, testPool } from '../helpers/db.js';
 import {
     createGrade,
     createStudent,
     createTeacher,
     createWorld,
     type World,
-} from './helpers/factory.js';
+} from '../helpers/factory.js';
 
 let world: World;
 

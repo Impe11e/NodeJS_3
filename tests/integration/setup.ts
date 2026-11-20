@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach } from 'vitest';
 import { closeDatabase, initDatabase, loadDbConfig } from '../../src/db/database.js';
-import { closeTestPool, resetDatabase } from './helpers/db.js';
+import { closeTestPool, resetDatabase } from '../helpers/db.js';
 
 beforeAll(() => {
     initDatabase(loadDbConfig(), { error: () => undefined });

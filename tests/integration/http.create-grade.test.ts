@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import { countGrades, expectDatabaseUnchanged, testPool } from './helpers/db.js';
-import { createGrade, createWorld, type World } from './helpers/factory.js';
+import { countGrades, expectDatabaseUnchanged, testPool } from '../helpers/db.js';
+import { createGrade, createWorld, type World } from '../helpers/factory.js';
 import {
     asUser,
     expectError,
@@ -189,7 +189,10 @@ describe('POST /grades — 409', () => {
             postGrade(world.teacher.id, validBody({ score: 99 }))
         );
 
-        expectError(response, 409);
+        expect(response.statusCode).toBe(409);
+        expect(response.json()).toEqual({
+            error: 'Grade for this student and lesson already exists',
+        });
         expect(await countGrades()).toBe(1);
     });
 

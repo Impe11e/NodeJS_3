@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import { expectDatabaseUnchanged } from './helpers/db.js';
-import { createGrade, createWorld, type World } from './helpers/factory.js';
+import { expectDatabaseUnchanged } from '../helpers/db.js';
+import { createGrade, createWorld, type World } from '../helpers/factory.js';
 import { asUser, expectError, unauthorizedCases, useApp } from './helpers/app.js';
 
 const { request } = useApp();

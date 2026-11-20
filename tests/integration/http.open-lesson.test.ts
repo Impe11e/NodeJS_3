@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import { expectDatabaseUnchanged } from './helpers/db.js';
-import { createStudent, createWorld, type World } from './helpers/factory.js';
+import { expectDatabaseUnchanged } from '../helpers/db.js';
+import { createStudent, createWorld, type World } from '../helpers/factory.js';
 import {
     asUser,
     expectError,
@@ -46,6 +46,18 @@ describe('GET /lessons/:lessonId — успіх', () => {
                 { student_id: world.classmate.id, student_name: world.classmate.name },
             ])
         );
+    });
+
+    test('заняття іншої групи — лише студенти цієї групи', async () => {
+        const response = await openLesson(world.teacher.id, world.otherGroupLessonId);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.json()).toEqual({
+            lesson_id: world.otherGroupLessonId,
+            date: world.lessonDate,
+            subject_name: world.subjectName,
+            students: [{ student_id: world.outsider.id, student_name: world.outsider.name }],
+        });
     });
 
     test('студенти впорядковані за іменем, а не за порядком вставки в БД', async () => {
