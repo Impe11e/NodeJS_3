@@ -30,15 +30,6 @@ export default [
         },
     },
 
-    // Оточення та глобальні змінні для тестів (Jest)
-    {
-        files: ['**/*.test.js', '**/__tests__/**/*.js'],
-        languageOptions: {
-            globals: {
-                ...globals.jest,
-            },
-        },
-    },
     // TypeScript-файли
     ...tseslint.configs.recommended.map((config) => ({
         ...config,

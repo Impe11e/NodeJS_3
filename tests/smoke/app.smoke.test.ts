@@ -1,7 +1,9 @@
-import { buildApp } from '../../dist/app.js';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import type { FastifyInstance } from 'fastify';
+import { buildApp } from '../../src/app.js';
 
 describe('Smoke Test', () => {
-    let app;
+    let app: FastifyInstance;
 
     beforeAll(() => {
         app = buildApp({ logger: false });

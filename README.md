@@ -9,7 +9,7 @@
 - Node.js, Fastify, TypeScript
 - PostgreSQL (драйвер `pg`)
 - Traefik - reverse proxy, маршрутизація за hostname
-- Jest — тести
+- Vitest — тести та покриття
 - ESLint — лінтер
 - Prettier — форматер
 - Husky + lint-staged — git hooks
@@ -114,14 +114,13 @@ node3/
 │   │   ├── 0002-use-x-user-id-header.md
 │   │   ├── 0003-use-postgresql.md
 │   │   ├── 0004-use-eslint-prettier-husky.md
-│   │   └── 0005-use-raw-sql-over-orm.md
+│   │   ├── 0005-use-raw-sql-over-orm.md
+│   │   └── 0006-use-vitest-over-jest.md
 │   ├── diagrams/               # Архітектурні діаграми
 │   │   └── er/
 │   │       └── ER_Nodejs3.drawio.png
 │   └── api.md                  # Документація API ендпоінтів
 ├── src/                        # Вихідний код бекенду (TypeScript)
-│   ├── __tests__/
-│   │   └── app.smoke.test.js   # Smoke-тест (GET /version)
 │   ├── db/
 │   │   ├── database.ts         # Пул PostgreSQL: initDatabase, query, withTransaction, ретраї
 │   │   ├── runSqlFile.ts       # Утиліта для виконання SQL-файлів (db:migrate, db:seed)
@@ -152,6 +151,10 @@ node3/
 │   │   └── domain.ts           # Доменні типи та інтерфейси TypeScript
 │   ├── app.ts                  # Ініціалізація та конфігурація Fastify
 │   └── server.ts               # Точка входу (запуск HTTP-сервера)
+├── tests/                      # Тести (Vitest), не входять у збірку dist
+│   ├── smoke/
+│   │   └── app.smoke.test.ts   # Smoke-тест (GET /version)
+│   └── tsconfig.json           # Перевірка типів тестів (npm run typecheck:tests)
 ├── standards/                  # Стандарти розробки та чеклисти
 │   ├── adr_format.md
 │   ├── checks.md
@@ -171,7 +174,8 @@ node3/
 ├── package.json                # Залежності та npm-скрипти
 ├── README.md                   # Головна документація проєкту
 ├── spec.md                     # Інженерна специфікація проєкту
-└── tsconfig.json               # Конфігурація компілятора TypeScript
+├── tsconfig.json               # Конфігурація компілятора TypeScript
+└── vitest.config.ts            # Конфігурація Vitest: проєкти тестів, покриття й пороги
 ```
 
 ## Інші документи

@@ -69,7 +69,7 @@
     ```
 
 - **Мутаційне тестування (`make mutation`):**
-  Запускає Stryker для `src/services` поверх unit-тестів і формує HTML-звіт у `reports/mutation/`. Команда завершується з ненульовим кодом, якщо mutation score нижче порогу зі [spec.md §6](../spec.md#6-тестування) (80%). Кожен вижилий мутант класифікується в DEFENSE.md: реальна прогалина / еквівалентний / прийнятний.
+  Запускає Stryker для `src/services` поверх unit-тестів і формує HTML-звіт у `reports/mutation/`. Команда завершується з ненульовим кодом, якщо mutation score нижче порогу зі [spec.md §6](../spec.md#6-тестування) (80%).
 
     ```bash
     make mutation
