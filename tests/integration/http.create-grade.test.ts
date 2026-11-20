@@ -192,4 +192,31 @@ describe('POST /grades — 409', () => {
         expectError(response, 409);
         expect(await countGrades()).toBe(1);
     });
+
+    test('одночасні запити на ту саму пару — рівно один 201, решта 409, у БД один рядок', async () => {
+        const scores = [60, 70, 80, 90, 100];
+
+        const responses = await Promise.all(
+            scores.map((score) => postGrade(world.teacher.id, validBody({ score })))
+        );
+
+        const created = responses.filter((response) => response.statusCode === 201);
+        const conflicts = responses.filter((response) => response.statusCode === 409);
+        expect(created).toHaveLength(1);
+        expect(conflicts).toHaveLength(scores.length - 1);
+        for (const response of conflicts) {
+            expectError(response, 409);
+        }
+
+        const body = created[0].json();
+        const rows = await testPool.query('SELECT id, student_id, lesson_id, score FROM grades');
+        expect(rows.rows).toEqual([
+            {
+                id: body.id,
+                student_id: world.student.id,
+                lesson_id: world.lessonId,
+                score: body.score,
+            },
+        ]);
+    });
 });
