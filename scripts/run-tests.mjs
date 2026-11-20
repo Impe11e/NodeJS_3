@@ -44,6 +44,7 @@ try {
     const sha = capture('git', ['rev-parse', 'HEAD']);
 
     if (run('docker', [...compose, 'up', '-d', '--wait', 'db']) !== 0) {
+        run('docker', [...compose, 'logs', 'db']);
         fail('Test database failed to start');
     }
 
@@ -70,6 +71,7 @@ try {
 
     if (runE2e && status === 0) {
         if (run('docker', [...compose, 'up', '-d', '--build', '--wait', 'app'], { env }) !== 0) {
+            run('docker', [...compose, 'logs', 'app']);
             fail('Application container failed to start');
         }
 
