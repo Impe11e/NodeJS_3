@@ -15,7 +15,7 @@ interface GradeQuery {
 }
 
 const gradesRoutes: FastifyPluginAsync = async (app) => {
-    app.addHook('preHandler', authenticateUser);
+    app.addHook('onRequest', authenticateUser);
 
     app.post<{ Body: CreateGradeBody }>(
         '/grades',

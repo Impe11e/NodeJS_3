@@ -1,4 +1,4 @@
-.PHONY: check test lint format-check build smoke-test clean install proxy-up proxy-down up down logs db-port url
+.PHONY: check test mutation lint format-check build smoke-test clean install proxy-up proxy-down up down logs db-port url
 
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 SLUG := $(shell echo '$(BRANCH)' | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$$//' | cut -c1-40)
@@ -11,7 +11,11 @@ check: install format-check lint build test
 
 # Запуск автотестів
 test:
-	npm run test
+	npm run test:all
+
+# Мутаційне тестування
+mutation:
+	npm run test:mutation
 
 # Перевірка форматування
 format-check:
