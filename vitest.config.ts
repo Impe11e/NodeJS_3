@@ -30,6 +30,16 @@ export default defineConfig({
             {
                 extends: true,
                 test: {
+                    name: 'integration',
+                    include: ['tests/integration/**/*.test.ts'],
+                    setupFiles: ['tests/integration/setup.ts'],
+                    fileParallelism: false,
+                    testTimeout: 30000,
+                },
+            },
+            {
+                extends: true,
+                test: {
                     name: 'smoke',
                     include: ['tests/smoke/**/*.test.ts'],
                 },
