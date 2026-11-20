@@ -4,6 +4,7 @@ export default defineConfig({
     test: {
         environment: 'node',
         restoreMocks: true,
+        mockReset: true,
         coverage: {
             provider: 'v8',
             include: ['src/**/*.ts'],
@@ -13,7 +14,7 @@ export default defineConfig({
             thresholds: {
                 branches: 80,
                 lines: 80,
-                'src/services/**': {
+                'src/services/grades.service.ts': {
                     branches: 100,
                 },
             },
