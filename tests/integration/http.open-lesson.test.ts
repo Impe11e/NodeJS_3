@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { expectDatabaseUnchanged } from './helpers/db.js';
-import { createWorld, type World } from './helpers/factory.js';
+import { createStudent, createWorld, type World } from './helpers/factory.js';
 import {
     asUser,
     expectError,
@@ -41,6 +41,21 @@ describe('GET /lessons/:lessonId — успіх', () => {
                 { student_id: world.classmate.id, student_name: world.classmate.name },
             ])
         );
+    });
+
+    test('студенти впорядковані за іменем, а не за порядком вставки в БД', async () => {
+        const yaryna = await createStudent('Ярина Шевчук', world.groupId);
+        const bohdan = await createStudent('Богдан Лисенко', world.groupId);
+
+        const response = await openLesson(world.teacher.id, world.lessonId);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.json().students).toEqual([
+            { student_id: world.classmate.id, student_name: 'Андрій Бондар' },
+            { student_id: bohdan.id, student_name: 'Богдан Лисенко' },
+            { student_id: world.student.id, student_name: 'Олена Коваль' },
+            { student_id: yaryna.id, student_name: 'Ярина Шевчук' },
+        ]);
     });
 });
 

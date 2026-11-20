@@ -117,6 +117,21 @@ describe('POST /grades — 404', () => {
         expectError(response, 404);
     });
 
+    test.each([
+        ['іншого вчителя', () => world.otherTeacher.id],
+        ['самого вчителя, що ставить оцінку', () => world.teacher.id],
+    ])('student_id %s — 404 Student not found, рядків у grades не додалось', async (_label, id) => {
+        const gradesBefore = await countGrades();
+
+        const response = await expectDatabaseUnchanged(() =>
+            postGrade(world.teacher.id, validBody({ student_id: id() }))
+        );
+
+        expect(response.statusCode).toBe(404);
+        expect(response.json()).toEqual({ error: 'Student not found' });
+        expect(await countGrades()).toBe(gradesBefore);
+    });
+
     test('студента не знайдено', async () => {
         const response = await expectDatabaseUnchanged(() =>
             postGrade(world.teacher.id, validBody({ student_id: UNKNOWN_ID }))
