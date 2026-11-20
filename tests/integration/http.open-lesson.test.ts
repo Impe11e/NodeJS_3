@@ -74,6 +74,15 @@ describe('GET /lessons/:lessonId — помилки', () => {
         expectError(response, 401);
     });
 
+    test.each(unauthorizedCases)(
+        '%s і lessonId не UUID — 401 має пріоритет над 400',
+        async (_label, userId) => {
+            const response = await expectDatabaseUnchanged(() => openLesson(userId, INVALID_ID));
+
+            expectError(response, 401);
+        }
+    );
+
     test('не вчитель — 403', async () => {
         const response = await expectDatabaseUnchanged(() =>
             openLesson(world.student.id, world.lessonId)

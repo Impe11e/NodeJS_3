@@ -63,10 +63,11 @@
 ### Команди запуску
 
 - **Запуск автотестів (`npm run test:all`, обгортка `make test`):**
-  піднімає тестовий стек (БД, міграції, сервіс), запускає всі рівні тестів і прибирає оточення.
 
     ```bash
-    npm run test:all   # або make test
+    npm run test:all          # або make test
+    npm run test:integration  # лише інтеграційні, без покриття
+    npm test                  # unit + smoke, без Docker
     ```
 
 - **Мутаційне тестування (`npm run test:mutation`, обгортка `make mutation`):**

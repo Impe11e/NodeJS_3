@@ -63,6 +63,7 @@ describe('POST /grades — 400', () => {
         ['оцінка 101', { score: 101 }],
         ['дріб', { score: 50.5 }],
         ['рядок замість числа', { score: '50' }],
+        ['boolean замість числа', { score: true }],
         ['student_id не UUID', { student_id: INVALID_ID }],
         ['lesson_id не UUID', { lesson_id: INVALID_ID }],
     ])('%s — 400, дані не змінились', async (_label, overrides) => {
@@ -80,6 +81,17 @@ describe('POST /grades — 401', () => {
 
         expectError(response, 401);
     });
+
+    test.each(unauthorizedCases)(
+        '%s і невалідне тіло — 401 має пріоритет над 400, дані не змінились',
+        async (_label, userId) => {
+            const response = await expectDatabaseUnchanged(() =>
+                postGrade(userId, { student_id: INVALID_ID, lesson_id: INVALID_ID, score: 0 })
+            );
+
+            expectError(response, 401);
+        }
+    );
 });
 
 describe('POST /grades — 403', () => {

@@ -120,6 +120,8 @@ node3/
 │   │   └── er/
 │   │       └── ER_Nodejs3.drawio.png
 │   └── api.md                  # Документація API ендпоінтів
+├── scripts/
+│   └── run-tests.mjs           # Одна команда тестів: піднімає тестову БД, запускає тести, прибирає
 ├── src/                        # Вихідний код бекенду (TypeScript)
 │   ├── db/
 │   │   ├── database.ts         # Пул PostgreSQL: initDatabase, query, withTransaction, ретраї
