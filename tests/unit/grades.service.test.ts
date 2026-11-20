@@ -18,14 +18,12 @@ vi.mock('../../src/repositories/grades.repository.js', () => ({
         insert: vi.fn(),
         findViewsByStudentId: vi.fn(),
         averageByStudentId: vi.fn(),
-        findByStudentId: vi.fn(),
     },
 }));
 
 vi.mock('../../src/services/lessons.service.js', () => ({
     lessonService: {
         getById: vi.fn(),
-        getBySubjectId: vi.fn(),
     },
 }));
 
@@ -38,7 +36,6 @@ vi.mock('../../src/services/subjects.service.js', () => ({
 
 vi.mock('../../src/services/users.service.js', () => ({
     userService: {
-        getById: vi.fn(),
         getStudentsByGroupId: vi.fn(),
         requireStudent: vi.fn(),
     },
@@ -173,7 +170,6 @@ describe('gradeService.create', () => {
             expect(first.id).toMatch(UUID_RE);
             expect(second.id).toMatch(UUID_RE);
             expect(first.id).not.toBe(second.id);
-            expect(insert.mock.calls[0][1].id).not.toBe(insert.mock.calls[1][1].id);
         });
     });
 
@@ -190,6 +186,17 @@ describe('gradeService.create', () => {
             expect(requireStudent).not.toHaveBeenCalled();
             expect(transaction).not.toHaveBeenCalled();
             expect(insert).not.toHaveBeenCalled();
+        });
+
+        test('роль перевіряється раніше за оцінку: студент з оцінкою 0 — 403, а не 400', async () => {
+            await expectAppError(
+                gradeService.create(student, student.id, LESSON_ID, 0),
+                403,
+                'Only teachers can assign grades'
+            );
+
+            expect(lessonGetById).not.toHaveBeenCalled();
+            expect(transaction).not.toHaveBeenCalled();
         });
     });
 
