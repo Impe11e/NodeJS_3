@@ -1,11 +1,13 @@
+import { uuidSchema } from './uuid.schema.js';
+
 export const createGradeSchema = {
     body: {
         type: 'object',
         required: ['student_id', 'lesson_id', 'score'],
         additionalProperties: false,
         properties: {
-            student_id: { type: 'string', format: 'uuid' },
-            lesson_id: { type: 'string', format: 'uuid' },
+            student_id: uuidSchema,
+            lesson_id: uuidSchema,
             score: { type: 'integer', minimum: 1, maximum: 100 },
         },
     },
@@ -16,8 +18,8 @@ export const listGradesSchema = {
         type: 'object',
         additionalProperties: false,
         properties: {
-            subject_id: { type: 'string', format: 'uuid' },
-            lesson_id: { type: 'string', format: 'uuid' },
+            subject_id: uuidSchema,
+            lesson_id: uuidSchema,
         },
     },
 } as const;
@@ -26,6 +28,6 @@ export const lessonParamsSchema = {
     params: {
         type: 'object',
         required: ['lessonId'],
-        properties: { lessonId: { type: 'string', format: 'uuid' } },
+        properties: { lessonId: uuidSchema },
     },
 } as const;

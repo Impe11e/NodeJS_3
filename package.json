@@ -7,10 +7,15 @@
     "scripts": {
         "start": "node dist/server.js",
         "dev": "node --watch --import tsx/esm src/server.ts",
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-        "test:smoke": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch=\"**/src/__tests__/**/*.smoke.test.js\"",
+        "test": "vitest run --project unit --project smoke",
+        "test:unit": "vitest run --project unit",
+        "test:smoke": "vitest run --project smoke",
+        "test:integration": "node scripts/run-tests.mjs integration",
+        "test:e2e": "node scripts/run-tests.mjs e2e",
+        "test:all": "node scripts/run-tests.mjs",
+        "test:mutation": "stryker run",
+        "typecheck:tests": "tsc -p tests/tsconfig.json",
         "build": "tsc",
-        "pretest": "npm run build",
         "db:migrate": "node --import tsx/esm src/db/runSqlFile.ts db/migrations/001_initial.sql",
         "db:seed": "node --import tsx/esm src/db/runSqlFile.ts db/seed.sql",
         "db:clear": "node --import tsx/esm src/db/runSqlFile.ts db/clear.sql",
@@ -39,17 +44,20 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.0.0",
+        "@stryker-mutator/core": "10.1.1",
+        "@stryker-mutator/vitest-runner": "10.1.1",
         "@types/node": "^26.6.4",
         "@types/pg": "^8.23.1",
+        "@vitest/coverage-v8": "4.1.12",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^9.1.0",
         "globals": "^15.0.0",
         "husky": "^9.0.11",
-        "jest": "^29.7.0",
         "lint-staged": "^15.2.2",
         "prettier": "^3.9.9",
         "tsx": "^4.23.15",
         "typescript": "5.9",
-        "typescript-eslint": "^8.71.2"
+        "typescript-eslint": "^8.71.2",
+        "vitest": "4.1.12"
     }
 }

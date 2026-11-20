@@ -86,7 +86,7 @@ export const gradeRepository = {
             grade_id: row.grade_id,
             score: row.score,
             created_at: new Date(row.created_at).toISOString(),
-            lesson_date: row.lesson_date,
+            lesson_date: new Date(row.lesson_date).toISOString(),
             subject_name: row.subject_name,
         }));
     },

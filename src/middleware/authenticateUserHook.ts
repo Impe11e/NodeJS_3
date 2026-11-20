@@ -1,6 +1,9 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { unauthorized } from '../errors/appError.js';
+import { UUID_PATTERN } from '../schemas/uuid.schema.js';
 import { userService } from '../services/users.service.js';
+
+const UUID_RE = new RegExp(UUID_PATTERN);
 
 declare module 'fastify' {
     interface FastifyRequest {
@@ -13,7 +16,6 @@ export async function authenticateUser(
     _reply: FastifyReply
 ): Promise<void> {
     const userId = request.headers['x-user-id'];
-    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
     if (typeof userId !== 'string' || !UUID_RE.test(userId)) {
         throw unauthorized('X-User-Id header is missing or invalid');

@@ -8,7 +8,7 @@ interface LessonParams {
 }
 
 const lessonsRoutes: FastifyPluginAsync = async (app) => {
-    app.addHook('preHandler', authenticateUser);
+    app.addHook('onRequest', authenticateUser);
 
     app.get<{ Params: LessonParams }>(
         '/lessons/:lessonId',

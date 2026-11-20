@@ -49,11 +49,10 @@
     ```bash
     npm run test:smoke
     ```
-    Перевіряє успішний запуск застосунку, коректність ініціалізації модулів та підключення до бази даних, а також відгук ендпоінту `/version`.
 
 ---
 
-## 3. Рівень 3: Повний цикл перевірок (Make-команди)
+## 3. Рівень 3: Повний цикл перевірок
 
 Призначений для локального запуску розробником перед створенням Pull Request, а також для виконання у CI/CD середовищах на чистій копії репозиторію (`git clone` + `npm install`).
 
@@ -61,37 +60,35 @@
 
 Комплексна валідація всього коду та бізнес-логіки проєкту згідно з Definition of Done.
 
-### Команди Make
+### Команди запуску
 
-- **Запуск автотестів (`make test`):**
-  Запускає повний тестовий suite (модульні та інтеграційні тести) за допомогою Jest.
+- **Запуск автотестів (`npm run test:all`, обгортка `make test`):**
 
     ```bash
-    make test
+    npm run test:all          # або make test: unit + integration з покриттям, потім e2e
+    npm run test:integration  # лише інтеграційні, без покриття
+    npm run test:e2e          # лише e2e: тестова БД + контейнер застосунку
+    npm test                  # unit + smoke, без Docker
     ```
 
-    _Еквівалент CLI:_
+    `test:all`, `test:integration` і `test:e2e` потребують Docker: `scripts/run-tests.mjs` піднімає оточення з `docker-compose.test.yml` і видаляє його після тестів.
+
+- **Мутаційне тестування (`npm run test:mutation`, обгортка `make mutation`):**
+  Stryker мутує `src/services/grades.service.ts`, мутантів вбивають unit-тести. Звіт — у `reports/mutation/`, класифікація вижилих — у `docs/mutation-report.md`. Mutation score нижче 80 % — команда завершується з помилкою.
 
     ```bash
-    npm test
+    npm run test:mutation   # або make mutation
     ```
 
 - **Повна перевірка проєкту (`make check`):**
-  Послідовно виконує перевірку форматування, лінтера та весь комплекс автотестів. Повинна проходити з нульовим кодом помилки (`exit 0`).
+  Послідовно встановлює залежності, перевіряє форматування й лінтер, збирає проєкт і запускає `npm run test:all`. Повинна проходити з нульовим кодом помилки (`exit 0`).
+
     ```bash
     make check
     ```
-    _Еквівалент CLI:_
+
+    _Еквівалент:_
+
     ```bash
-    npx prettier --check . && npx eslint . && npm test
+    npm ci && npm run format:check && npm run lint && npm run build && npm run test:all
     ```
-
----
-
-## Підсумок регламенту
-
-| Етап                | Тригер            | Інструменти / Команди            | Блокуюча дія             |
-| :------------------ | :---------------- | :------------------------------- | :----------------------- |
-| **pre-commit**      | `git commit`      | Prettier, ESLint (`lint-staged`) | Блокує створення коміту  |
-| **pre-push**        | `git push`        | Smoke-тест, Build check          | Блокує відправку у Git   |
-| **Full Validation** | `make check` / CI | Prettier + ESLint + Jest         | Блокує злиття PR (Merge) |

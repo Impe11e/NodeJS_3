@@ -91,9 +91,18 @@ function getErrorCode(error: unknown): string | undefined {
     return typeof error.code === 'string' ? error.code : undefined;
 }
 
+const connectionTimeoutMessages = new Set([
+    'timeout exceeded when trying to connect',
+    'Connection terminated due to connection timeout',
+]);
+
+function isConnectionTimeout(error: unknown): boolean {
+    return error instanceof Error && connectionTimeoutMessages.has(error.message);
+}
+
 function isTransientDatabaseError(error: unknown): boolean {
     const code = getErrorCode(error);
-    return code !== undefined && transientCodes.has(code);
+    return (code !== undefined && transientCodes.has(code)) || isConnectionTimeout(error);
 }
 
 async function withRetry<T>(operation: () => Promise<T>): Promise<T> {

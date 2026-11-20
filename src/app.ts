@@ -33,6 +33,7 @@ export function buildApp(opts = {}) {
         ajv: {
             customOptions: {
                 removeAdditional: false,
+                coerceTypes: false,
             },
         },
     });

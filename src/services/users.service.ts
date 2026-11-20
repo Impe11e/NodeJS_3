@@ -12,8 +12,8 @@ export const userService = {
         return userRepository.findStudentsByGroupId(groupId);
     },
     async requireStudent(id: string): Promise<User> {
-        const user = await this.getById(id);
-        if (user.role !== 'STUDENT') throw notFound('Student not found');
+        const user = await userRepository.findById(id);
+        if (!user || user.role !== 'STUDENT') throw notFound('Student not found');
         return user;
     },
 };

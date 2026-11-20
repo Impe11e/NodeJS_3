@@ -6,12 +6,12 @@ import tseslint from 'typescript-eslint';
 export default [
     // Ігноровані шляхи
     {
-        ignores: ['node_modules/', 'coverage/', 'dist/'],
+        ignores: ['node_modules/', 'coverage/', 'dist/', 'reports/'],
     },
 
     // Базова конфігурація для JS файлів проєкту
     {
-        files: ['**/*.js'],
+        files: ['**/*.{js,mjs}'],
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
@@ -30,15 +30,6 @@ export default [
         },
     },
 
-    // Оточення та глобальні змінні для тестів (Jest)
-    {
-        files: ['**/*.test.js', '**/__tests__/**/*.js'],
-        languageOptions: {
-            globals: {
-                ...globals.jest,
-            },
-        },
-    },
     // TypeScript-файли
     ...tseslint.configs.recommended.map((config) => ({
         ...config,
