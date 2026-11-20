@@ -7,7 +7,25 @@ import { lessonService } from '../../src/services/lessons.service.js';
 import { subjectService } from '../../src/services/subjects.service.js';
 import { userService } from '../../src/services/users.service.js';
 import { AppError, forbidden, notFound } from '../../src/errors/appError.js';
-import type { Grade, GradeView, Lesson, Subject, User } from '../../src/types/domain.js';
+import type { Grade } from '../../src/types/domain.js';
+import {
+    averages,
+    gradeViews,
+    groupStudents,
+    invalidScores,
+    lesson,
+    LESSON_ID,
+    NOW,
+    OTHER_GROUP_ID,
+    storedGrade,
+    student,
+    subject,
+    SUBJECT_ID,
+    GROUP_ID,
+    teacher,
+    UUID_RE,
+    validScores,
+} from './fixtures/grades.fixtures.js';
 
 vi.mock('../../src/db/database.js', () => ({
     withTransaction: vi.fn(),
@@ -40,37 +58,6 @@ vi.mock('../../src/services/users.service.js', () => ({
         requireStudent: vi.fn(),
     },
 }));
-
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const NOW = '2026-11-20T10:00:00.000Z';
-
-const GROUP_ID = '10000000-0000-4000-8000-000000000001';
-const OTHER_GROUP_ID = '10000000-0000-4000-8000-000000000002';
-const SUBJECT_ID = '20000000-0000-4000-8000-000000000001';
-const LESSON_ID = '30000000-0000-4000-8000-000000000001';
-
-const teacher: User = {
-    id: '40000000-0000-4000-8000-000000000001',
-    name: 'Вчитель',
-    role: 'TEACHER',
-    groupId: null,
-};
-
-const student: User = {
-    id: '50000000-0000-4000-8000-000000000001',
-    name: 'Студент',
-    role: 'STUDENT',
-    groupId: GROUP_ID,
-};
-
-const lesson: Lesson = {
-    id: LESSON_ID,
-    groupId: GROUP_ID,
-    subjectId: SUBJECT_ID,
-    date: '2026-10-12T10:00:00.000Z',
-};
-
-const subject: Subject = { id: SUBJECT_ID, name: 'Програмування' };
 
 const client = { query: vi.fn() } as unknown as PoolClient;
 
@@ -122,7 +109,7 @@ afterEach(() => {
 
 describe('gradeService.create', () => {
     describe('успішне створення', () => {
-        test.each([1, 50, 100])('оцінка %i зберігається й повертається', async (score) => {
+        test.each(validScores)('оцінка %i зберігається й повертається', async (score) => {
             vi.useFakeTimers({ toFake: ['Date'] });
             vi.setSystemTime(new Date(NOW));
 
@@ -149,18 +136,16 @@ describe('gradeService.create', () => {
         });
 
         test('повертає саме те, що повернув репозиторій', async () => {
-            const stored: Grade = {
-                id: '60000000-0000-4000-8000-000000000001',
-                studentId: student.id,
-                lessonId: LESSON_ID,
-                score: 77,
-                createdAt: '2026-11-01T08:00:00.000Z',
-            };
-            insert.mockResolvedValue(stored);
+            insert.mockResolvedValue(storedGrade);
 
-            const result = await gradeService.create(teacher, student.id, LESSON_ID, 77);
+            const result = await gradeService.create(
+                teacher,
+                student.id,
+                LESSON_ID,
+                storedGrade.score
+            );
 
-            expect(result).toBe(stored);
+            expect(result).toBe(storedGrade);
         });
 
         test('id кожної оцінки — UUID і різний для різних оцінок', async () => {
@@ -201,17 +186,7 @@ describe('gradeService.create', () => {
     });
 
     describe('валідація оцінки', () => {
-        test.each([
-            ['0', 0],
-            ['101', 101],
-            ['-1', -1],
-            ['дріб 50.5', 50.5],
-            ['дріб 0.5', 0.5],
-            ['дріб 100.5', 100.5],
-            ['NaN', Number.NaN],
-            ['Infinity', Number.POSITIVE_INFINITY],
-            ['рядок "50"', '50' as unknown as number],
-        ])('%s — 400, нічого не викликається', async (_label, score) => {
+        test.each(invalidScores)('%s — 400, нічого не викликається', async (_label, score) => {
             await expectAppError(
                 gradeService.create(teacher, student.id, LESSON_ID, score),
                 400,
@@ -334,20 +309,7 @@ describe('gradeService.create', () => {
 
 describe('gradeService.openLesson', () => {
     test('повертає заняття зі списком студентів групи в тому ж порядку', async () => {
-        getStudentsByGroupId.mockResolvedValue([
-            {
-                id: 'a0000000-0000-4000-8000-000000000001',
-                name: 'Анна',
-                role: 'STUDENT',
-                groupId: GROUP_ID,
-            },
-            {
-                id: 'b0000000-0000-4000-8000-000000000002',
-                name: 'Борис',
-                role: 'STUDENT',
-                groupId: GROUP_ID,
-            },
-        ]);
+        getStudentsByGroupId.mockResolvedValue(groupStudents);
 
         const result = await gradeService.openLesson(teacher, LESSON_ID);
 
@@ -357,10 +319,10 @@ describe('gradeService.openLesson', () => {
         expect(result).toEqual({
             lesson_id: LESSON_ID,
             date: lesson.date,
-            subject_name: 'Програмування',
+            subject_name: subject.name,
             students: [
-                { student_id: 'a0000000-0000-4000-8000-000000000001', student_name: 'Анна' },
-                { student_id: 'b0000000-0000-4000-8000-000000000002', student_name: 'Борис' },
+                { student_id: groupStudents[0].id, student_name: groupStudents[0].name },
+                { student_id: groupStudents[1].id, student_name: groupStudents[1].name },
             ],
         });
     });
@@ -373,7 +335,7 @@ describe('gradeService.openLesson', () => {
         expect(result).toEqual({
             lesson_id: LESSON_ID,
             date: lesson.date,
-            subject_name: 'Програмування',
+            subject_name: subject.name,
             students: [],
         });
     });
@@ -422,25 +384,8 @@ describe('gradeService.openLesson', () => {
 });
 
 describe('gradeService.listForStudent', () => {
-    const views: GradeView[] = [
-        {
-            grade_id: '60000000-0000-4000-8000-000000000001',
-            score: 90,
-            created_at: '2026-10-12T12:00:00.000Z',
-            lesson_date: '2026-10-12T10:00:00.000Z',
-            subject_name: 'Програмування',
-        },
-        {
-            grade_id: '60000000-0000-4000-8000-000000000002',
-            score: 75,
-            created_at: '2026-10-13T12:00:00.000Z',
-            lesson_date: '2026-10-13T10:00:00.000Z',
-            subject_name: 'Програмування',
-        },
-    ];
-
     beforeEach(() => {
-        findViewsByStudentId.mockResolvedValue(views);
+        findViewsByStudentId.mockResolvedValue(gradeViews);
     });
 
     test('без фільтрів — оцінки поточного студента, фільтри не перевіряються', async () => {
@@ -452,7 +397,7 @@ describe('gradeService.listForStudent', () => {
             subjectId: undefined,
             lessonId: undefined,
         });
-        expect(result).toBe(views);
+        expect(result).toBe(gradeViews);
     });
 
     test('фільтр за предметом — предмет перевіряється й передається', async () => {
@@ -464,7 +409,7 @@ describe('gradeService.listForStudent', () => {
             subjectId: SUBJECT_ID,
             lessonId: undefined,
         });
-        expect(result).toBe(views);
+        expect(result).toBe(gradeViews);
     });
 
     test('фільтр за заняттям — заняття перевіряється й передається', async () => {
@@ -476,7 +421,7 @@ describe('gradeService.listForStudent', () => {
             subjectId: undefined,
             lessonId: LESSON_ID,
         });
-        expect(result).toBe(views);
+        expect(result).toBe(gradeViews);
     });
 
     test('обидва фільтри — перевіряються обидва й передаються разом', async () => {
@@ -488,7 +433,7 @@ describe('gradeService.listForStudent', () => {
             subjectId: SUBJECT_ID,
             lessonId: LESSON_ID,
         });
-        expect(result).toBe(views);
+        expect(result).toBe(gradeViews);
     });
 
     test('студент без оцінок — порожній список', async () => {
@@ -547,7 +492,7 @@ describe('gradeService.listForStudent', () => {
 });
 
 describe('gradeService.averageForStudent', () => {
-    test.each([87.5, 1, 100, 66.67])('повертає середній бал %s', async (average) => {
+    test.each(averages)('повертає середній бал %s', async (average) => {
         averageByStudentId.mockResolvedValue(average);
 
         const result = await gradeService.averageForStudent(student);
