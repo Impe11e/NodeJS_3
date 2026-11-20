@@ -6,6 +6,7 @@ node_modules/
 # Testing & Coverage
 coverage/
 *.lcov
+reports/
 
 # Environment & Local Secrets
 .env

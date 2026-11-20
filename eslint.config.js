@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint';
 export default [
     // Ігноровані шляхи
     {
-        ignores: ['node_modules/', 'coverage/', 'dist/'],
+        ignores: ['node_modules/', 'coverage/', 'dist/', 'reports/'],
     },
 
     // Базова конфігурація для JS файлів проєкту

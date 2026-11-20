@@ -13,6 +13,7 @@
         "test:integration": "node scripts/run-tests.mjs integration",
         "test:e2e": "node scripts/run-tests.mjs e2e",
         "test:all": "node scripts/run-tests.mjs",
+        "test:mutation": "stryker run",
         "typecheck:tests": "tsc -p tests/tsconfig.json",
         "build": "tsc",
         "db:migrate": "node --import tsx/esm src/db/runSqlFile.ts db/migrations/001_initial.sql",
@@ -43,6 +44,8 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.0.0",
+        "@stryker-mutator/core": "10.1.1",
+        "@stryker-mutator/vitest-runner": "10.1.1",
         "@types/node": "^26.6.4",
         "@types/pg": "^8.23.1",
         "@vitest/coverage-v8": "4.1.12",
