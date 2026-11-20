@@ -65,13 +65,16 @@
 - **Запуск автотестів (`npm run test:all`, обгортка `make test`):**
 
     ```bash
-    npm run test:all          # або make test
+    npm run test:all          # або make test: unit + integration з покриттям, потім e2e
     npm run test:integration  # лише інтеграційні, без покриття
+    npm run test:e2e          # лише e2e: тестова БД + контейнер застосунку
     npm test                  # unit + smoke, без Docker
     ```
 
+    `test:all`, `test:integration` і `test:e2e` потребують Docker: `scripts/run-tests.mjs` піднімає оточення з `docker-compose.test.yml` і видаляє його після тестів.
+
 - **Мутаційне тестування (`npm run test:mutation`, обгортка `make mutation`):**
-  Запускає Stryker для `src/services` поверх unit-тестів і формує HTML-звіт у `reports/mutation/`. Команда завершується з ненульовим кодом, якщо mutation score нижче порогу зі спеки.
+  Stryker мутує `src/services/grades.service.ts`, мутантів вбивають unit-тести. Звіт — у `reports/mutation/`, класифікація вижилих — у `docs/mutation-report.md`. Mutation score нижче 80 % — команда завершується з помилкою.
 
     ```bash
     npm run test:mutation   # або make mutation
