@@ -127,12 +127,7 @@ describe('gradeRepository.findViewsByStudentId', () => {
     test('без фільтрів — усі оцінки студента, впорядковані за часом створення', async () => {
         const views = await gradeRepository.findViewsByStudentId(world.student.id);
 
-        expect(
-            views.map((view) => ({
-                ...view,
-                lesson_date: new Date(view.lesson_date).toISOString(),
-            }))
-        ).toEqual([
+        expect(views).toEqual([
             {
                 grade_id: lessonGradeId,
                 score: 90,

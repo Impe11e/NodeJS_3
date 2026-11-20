@@ -7,7 +7,7 @@
     "scripts": {
         "start": "node dist/server.js",
         "dev": "node --watch --import tsx/esm src/server.ts",
-        "test": "vitest run",
+        "test": "vitest run --project unit --project smoke",
         "test:unit": "vitest run --project unit",
         "test:smoke": "vitest run --project smoke",
         "test:integration": "node scripts/run-tests.mjs integration",
