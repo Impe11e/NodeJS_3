@@ -172,17 +172,6 @@ describe('gradeService.create', () => {
             expect(transaction).not.toHaveBeenCalled();
             expect(insert).not.toHaveBeenCalled();
         });
-
-        test('роль перевіряється раніше за оцінку: студент з оцінкою 0 — 403, а не 400', async () => {
-            await expectAppError(
-                gradeService.create(student, student.id, LESSON_ID, 0),
-                403,
-                'Only teachers can assign grades'
-            );
-
-            expect(lessonGetById).not.toHaveBeenCalled();
-            expect(transaction).not.toHaveBeenCalled();
-        });
     });
 
     describe('валідація оцінки', () => {

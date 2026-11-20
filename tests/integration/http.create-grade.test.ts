@@ -90,6 +90,17 @@ describe('POST /grades — 400', () => {
 
         expectError(response, 400);
     });
+
+    test.each([
+        ['оцінка 0', { score: 0 }],
+        ['student_id не UUID', { student_id: INVALID_ID }],
+    ])('студент і %s — 400 має пріоритет над 403, дані не змінились', async (_label, overrides) => {
+        const response = await expectDatabaseUnchanged(() =>
+            postGrade(world.student.id, validBody(overrides))
+        );
+
+        expectError(response, 400);
+    });
 });
 
 describe('POST /grades — 401', () => {
